@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyes</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #container{
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            height: 100vh;
+            overflow: hidden;
+            background: black;
+        }
+        .box{
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* border: 1px solid black; */
+        }
+        .box::before{
+            content:'';
+            /* border: 1px solid rgb(0, 0, 0); */
+            width: 100%;
+        }
+        .box::after{
+            content: '';
+            border: 1px solid red;
+            border-radius: 100%;
+            height: 5px ;
+            width: 5px;
+        }
+        #eyes{
+            height: fit-content;
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .eye{
+            position: relative;
+            /* transform: rotate(130deg); */
+            border: 20px solid #b3b0b0;
+            border-radius: 100%;
+            height: 100px;
+            width: 100px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px 0 #0000007e;
+            /* border: 1px solid black; */
+
+        }
+        .eye::before{
+            content: '';
+            position: absolute;
+            /* box-shadow: 2px 5px 20px rgba(0, 0, 0, 0.395); */
+            border-radius: 100%;
+            border: 1px solid #0000004f;
+            /* padding: 5px; */
+            /* background: black; */
+            width: 100%;
+            height: 100%;
+        }
+        .line{
+            width: 100%;
+            height: 10%;
+            /* background: #000; */
+            display: flex;
+            align-items: center;
+        }
+        .brownbol{
+            /* border: ; */
+            position: absolute;
+            right: 0;
+            height: 50px;
+            width: 50px;
+            background: #ab5231;
+            box-shadow: inset 0 0 15px 0 #000000b3;
+            border: 1px solid rgba(0, 0, 0, 0.556);
+            border-radius: 100%;
+        }
+        .brownbol::before{
+            content: '';
+            background: rgb(0, 0, 0);
+            height: 50%;
+            width: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            border-radius: 100%;
+            /* left: 10%; */
+        }
+        .whitebol{
+            background: rgb(255, 255, 255);
+            border-radius: 100%;
+            height: 10%;
+            width: 10%;
+            position: absolute;
+            left: 60%;
+            top: 40%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div id="eyes">
+            <div class="eye" id="eyeOne">
+        
+                <div class="line">
+                    <div class="brownbol">
+                        <div class="whitebol"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="eye" id="eyeTwo">
+                <div class="line">
+                    <div class="brownbol">
+                        <div class="whitebol"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let container=document.getElementById('container');
+        let eyes = document.querySelectorAll('.eye');
+        const boxes=[];
+
+        // creating 300 small boxes and append it to parent div container
+        for(let i=1;i<=400;i++){
+            let box=document.createElement('div');
+            box.classList='box';
+            // box.style.border='1px solid black';
+            box.style.width='50px';
+            box.style.height='50px';
+            container.appendChild(box);
+            // also pushing the box element to boxes array so taht we can use it later
+            boxes.push(box);
+        }
+
+        // mousemove event to know the mouse position
+        window.addEventListener('mousemove',(event)=>{
+            
+            let {clientX,clientY}=event;// to get x and y position of mouse
+
+            
+            boxes.forEach((box)=>{
+
+                // to get center of each box according to right & left position also
+                const boxRect=box.getBoundingClientRect(); // to get position,height and width of the box 
+                const boxCenterX=boxRect.left+boxRect.width/2; // center in x-axis
+                const boxCenterY=boxRect.top+boxRect.height/2; // center in y-axis
+
+                // deltax and deltay is the difference between boxcenter and the mouse angle;
+                const deltaX=clientX-boxCenterX;
+                const deltaY=clientY-boxCenterY;
+
+                // to get angle we use atan2 mathod of javascript 
+                const radian =Math.atan2(deltaY,deltaX) // it give radian value but we want angle
+                const angle=radian * (180/Math.PI); // so here we are converting radian to angle
+
+                box.style.transform=`rotate(${angle}deg)`;
+            })
+
+            // for eyes 
+            eyes.forEach((eye)=>{
+                let eyeRect=eye.getBoundingClientRect(); // to get height,width and position of the element
+
+                // center in x and y axis
+                let eyeCenterX=eyeRect.left+eyeRect.width/2;
+                let eyeCenterY=eyeRect.top+eyeRect.height/2;
+
+                // mouse position - eyes ceneter to get the angle
+                let deltaX=clientX-eyeCenterX;
+                let deltaY=clientY-eyeCenterY;
+                
+                let radian=Math.atan2(deltaY,deltaX);
+                let angle=radian* (180/Math.PI);
+                eye.style.transform=`rotate(${angle}deg)`;
+                
+            })
+        })
+    </script>
+</body>
+</html>
